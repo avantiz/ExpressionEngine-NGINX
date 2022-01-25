@@ -110,7 +110,7 @@ server {
   }
 
   location ~* \.php$ {
-    fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+    fastcgi_pass unix:/run/php/php7.4-fpm.sock;
     include fastcgi_params;
     fastcgi_index index.php5;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -119,4 +119,6 @@ server {
 }
 
 ```
+
+Salve o arquivo e saia com ```:``` + ```W``` + ```Q```
 
