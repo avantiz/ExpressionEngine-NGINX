@@ -133,6 +133,32 @@ Recarregue o Nginx:
 sudo systemctl reload nginx.service
 ```
 
+Agora vamos configurar o Nginx para comprimir as páginas html e arquivos, usando GZIP:
+
+Para realizar essas alterações, abra o arquivo de configuração principal do nginx em seu editor de texto (nesse caso, o Nano):\
+```
+sudo nano /etc/nginx/nginx.conf
+```
+Localize a seção de configurações do arquivo, que deve se parecer mais ou menos com isso:
+```
+. . .
+##
+# `gzip` Settings
+#
+#
+gzip on;
+gzip_disable "msie6";
+
+# gzip_vary on;
+# gzip_proxied any;
+# gzip_comp_level 6;
+# gzip_buffers 16 8k;
+# gzip_http_version 1.1;
+# gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+. . . 
+
+```
+
 # Instalando o ExpressionEngine
 
 Crie uma pasta na raiz:
