@@ -11,7 +11,7 @@ O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em
 - MySQL 5.6 ou mais recente ou Percona 5.6 ou mais recente. Neste guia vamos utilizar o MySQL.
 - Um servidor web usando Apache ou NGINX. Neste guia vamos utilizar o NGINX.
 
-ANTES DE COMEÇAR:
+# ANTES DE COMEÇAR:
 
 Verifique a sua versão do Ubuntu
 ```
@@ -38,7 +38,7 @@ Instale os pacotes que forem necessários:
 ```
 sudo apt install -y zip unzip curl wget git
 ```
-INSTALE O PHP
+# INSTALE O PHP
 
 Instale o PHP, assim como as extensões que são necessárias:
 ```
@@ -48,7 +48,7 @@ Confira a versão:
 ```
 php --version
 ```
-INSTALE O MYSQL
+# INSTALE O MYSQL
 
 Instale o MySQL, a seguir:
 ```
@@ -76,7 +76,7 @@ mysql> quit
 ```
 NOTA: Substitua "seubancodados", "usuáriobancodedados" e "suasenhadobancodedados" pelos seus dados. Use uma senha segura.
 
-INSTALE O NGINX:
+# INSTALE O NGINX:
 
 Instale o servidor web Nginx com o seguinte comando:
 ```
@@ -121,4 +121,17 @@ server {
 ```
 
 Salve o arquivo e saia com ```:``` + ```W``` + ```Q```
+
+Ative a nova configuração ```expressionengine.conf``` criada, linkando o arquivo à pasta ```sites-enabled```.
+
+Teste a configuração:
+
+``` sudo nginx -t ```
+
+Recarregue o Nginx:
+```
+sudo systemctl reload nginx.service
+```
+
+# Instalando o ExpressionEngine
 
