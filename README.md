@@ -1,4 +1,4 @@
-COMO INSTALAR O EXPRESSIONENGINE EM UBUNTU 18 LTS E NGINX
+# COMO INSTALAR O EXPRESSIONENGINE EM UBUNTU 18 LTS E NGINX
 
 O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em que escrevo este tutorial, ele precisa, no mínimo:
 
@@ -11,7 +11,7 @@ O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em
 - MySQL 5.6 ou mais recente ou Percona 5.6 ou mais recente. Neste guia vamos utilizar o MySQL.
 - Um servidor web usando Apache ou NGINX. Neste guia vamos utilizar o NGINX.
 
-# ANTES DE COMEÇAR:
+# Antes de começar:
 
 Verifique a sua versão do Ubuntu
 ```
@@ -38,7 +38,7 @@ Instale os pacotes que forem necessários:
 ```
 sudo apt install -y zip unzip curl wget git
 ```
-# INSTALE O PHP
+# Instale o PHP
 
 Instale o PHP, assim como as extensões que são necessárias:
 ```
@@ -48,7 +48,7 @@ Confira a versão:
 ```
 php --version
 ```
-# INSTALE O MYSQL
+# Instale o MYSQL
 
 Instale o MySQL, a seguir:
 ```
@@ -76,7 +76,7 @@ mysql> quit
 ```
 NOTA: Substitua "seubancodados", "usuáriobancodedados" e "suasenhadobancodedados" pelos seus dados. Use uma senha segura.
 
-# INSTALE O NGINX:
+# Instale o NGINX:
 
 Instale o servidor web Nginx com o seguinte comando:
 ```
@@ -135,3 +135,28 @@ sudo systemctl reload nginx.service
 
 # Instalando o ExpressionEngine
 
+Crie uma pasta na raiz:
+```
+sudo mkdir -p /var/www/expressionengine
+```
+Altere o proprietário da pasta /var/www/expressionengine  para fulano (o nome de usuário que você escolheu lá em cima):
+```
+sudo chown -R fulano:fulano /var/www/expressionengine
+```
+Navegue para a pasta root:
+```
+cd /var/www/expressionengine
+```
+Baixe a última versão do ExpressionEngine e descompacte os arquivos para uma pasta no seu servidor:
+```
+wget -O ee.zip --referer https://expressionengine.com/ 'https://expressionengine.com/?ACT=243'
+unzip ee.zip
+rm ee.zip
+```
+
+Altere o proprietário da pasta ``` /var/www/expressionengine ``` para ```www-data```:
+```
+sudo chown -R www-data:www-data /var/www/expressionengine
+```
+
+Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
