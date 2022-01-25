@@ -24,7 +24,7 @@ adduser fulano --gecos "Fulano"
 usermod -aG sudo fulano  
 su - fulano
 ```
-NOTA: troque fulano pelo seu nome de usuário
+NOTA: troque ```fulano``` pelo seu nome de usuário
 
 Defina o fuso horário:
 ```
@@ -85,7 +85,7 @@ mysql> GRANT ALL ON seubancodedados.* TO 'usuáriobancodedados' IDENTIFIED BY 's
 mysql> FLUSH PRIVILEGES;
 mysql> quit
 ```
-NOTA: Substitua "seubancodados", "usuáriobancodedados" e "suasenhadobancodedados" pelos seus dados. Use uma senha segura.
+NOTA: Substitua ```seubancodados```, ```usuáriobancodedados``` e ```suasenhadobancodedados``` pelos seus dados. Use uma senha segura.
 
 # Instale o NGINX:
 
