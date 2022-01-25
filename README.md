@@ -244,3 +244,56 @@ Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. 
 
 # Otimizando sua instalação do ExpressionEngine
 
+Agora vamos instalar e deixar seguro o memcached no Ubuntu. O memcached é um sistema de cache de objetos, armazenando temporariamente objetos na memória do servidor, retendo registros frequentes ou acessados recentemente. Com isto, reduziremos a quantidade de requisições diretas em seus bancos de dados, reduzindo a carga do sistema.
+
+## Instale o Memcached dos repositórios oficiais
+
+Vamos garantir que tudo esteja atualizado antes de prosseguirmos:
+```
+sudo apt update
+```
+Agora vamos instalar o pacote oficial
+```
+sudo apt install memcached
+```
+E vamos instalar também ```libmemcached-tools```, uma biblioteca que fornece várias ferramentas para trabalhar com nosso servidor Memcached
+```
+sudo apt install libmemcached-tools 
+```
+Feito isso, o Memcached estará instalado no servidor como um serviço, junto com ferramentas que nos permitirão testar a conectividade.
+
+## Deixando o Memcached seguro
+
+Abra ```/etc/memcached.conf``` com nano:
+```
+sudo nano /etc/memcached.conf
+```
+Veja se existe a seguinte linha no arquivo:
+```
+. . .
+-l 127.0.0.1
+. . .
+```
+Se você visualizar que a configuração padrão é ```-l 127.0.0.1``` , então não há necessidade de modificar esta linha, caso contrário modifique-a para ficar assim. Agora vamos desabilitar o UDP do Memcached para evitar _exploits_ de ataque de _DoS_. Para desativar o UDP (enquanto deixa o TCP), adicione a seguinte opção na parte final desse arquivo:
+```
+. . .
+-U 0
+```
+Salve e feche o arquivo quando você terminar. Dê um restart no serviço Memcached para aplicar as alterações:
+```
+sudo systemctl restart memcached
+```
+Verifique se o memcached está ativado na interface local e recebendo as conexões TCP, digitando:
+```
+sudo netstat -plunt
+```
+Você deverá visualizar o seguinte:
+```
+Output
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+. . .
+tcp        0      0 127.0.0.1:11211         0.0.0.0:*               LISTEN      2279/memcached
+. . .
+```
+
