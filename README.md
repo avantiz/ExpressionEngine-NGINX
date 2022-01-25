@@ -92,7 +92,8 @@ sudo nginx -v
 Agora vamos configurar o Nginx para o ExpressionEngine. Execute 
 sudo vim /etc/nginx/sites-available/expressionengine.conf e preencha o arquivo com a seguinte configuração:
 
-```server {
+```
+server {
 
   listen [::]:80;
   listen 80;
@@ -118,4 +119,6 @@ sudo vim /etc/nginx/sites-available/expressionengine.conf e preencha o arquivo c
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   }
 
-}```
+} 
+
+```
