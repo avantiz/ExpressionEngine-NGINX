@@ -297,3 +297,151 @@ tcp        0      0 127.0.0.1:11211         0.0.0.0:*               LISTEN      
 . . .
 ```
 
+Isso confirma que o ```memcached``` está ativo e limitado ao ```127.0.0.1``` usando apenas TCP.
+
+## Adicionando usuários autorizados
+
+Para adicionar usuários autorizados em nosso serviço MemCached, vamos usar o framework Simple Authentication anda Security layer (SASL):
+
+Para confirmar que o Memcached está ativo e sendo executado, digite o seguinte:
+
+``` memcstat --servers="127.0.0.1" ```
+
+Você verá uma saída semelhante a essa:
+```
+Output
+Server: 127.0.0.1 (11211)
+         pid: 2279
+         uptime: 65
+         time: 1546620611
+         version: 1.5.6
+     . . .
+
+```
+
+Agora vamos ativar o SASL, adicionando o parâmetro ``` -S ``` em nosso arquivo de configiuração  ``` /etc/memcached.conf. ```
+
+``` sudo nano /etc/memcached.conf ```
+
+E lá no final do arquivo, adicione:
+```
+. . .
+-S
+```
+Agora localize e descomente a opção ``` -vv ``` nesse mesmo arquivo. Salve e feche o arquivo, dando um _restart_ no serviço  Memcached:
+
+``` sudo systemctl restart memcached ```
+
+Vamos dar uma olhada nos logs, para ver se o suporte a SASL foi inicializado:
+
+``` sudo journalctl -u memcached ```
+
+Você verá uma linha mais ou menos assim, indicando que o suporte SASL foi estartado:
+
+Output
+
+```
+. . .
+Jan 04 16:51:12 memcached systemd-memcached-wrapper[2310]: Initialized SASL.
+. . .
+
+```
+
+Feito isso, vamos baixar o pacote ``` sasl2-bin ```, um pacote que contém programas administrativos para o o banco de dados de usuários do SASL. Isso nos permitirá criar um usuário autenticado:
+
+```
+sudo apt install sasl2-bin
+```
+
+O próximo passo é criar a pasta e o arquivo que o Memcached vai verificar pelas configurações SASL:
+```
+sudo mkdir /etc/sasl2
+sudo nano /etc/sasl2/memcached.conf 
+```
+
+Adicione o seguinte, no seu arquivo de configuração ```memcached.conf``` :
+
+```
+mech_list: plain
+log_level: 5
+sasldb_path: /etc/sasl2/memcached-sasldb2
+```
+
+Agora vamos criar um banco de dados SASL com nossas credenciais de usuário (escolha o seu nome de usuário):
+```
+sudo saslpasswd2 -a memcached -c -f /etc/sasl2/memcached-sasldb2 meuusuario
+```
+
+Entre com sua senha e confirmação de senha e finalmente, dê ao ```memcached``` a autoridade sobre o banco de dados SASL:
+```
+sudo chown memcache:memcache /etc/sasl2/memcached-sasldb2
+```
+
+Dê um _restart_ do serviço do Memcached:
+
+```
+sudo systemctl restart memcached
+```
+
+Confira se tudo está funcionando, de acordo com as credenciais que nós criamos:
+```
+memcstat --servers="127.0.0.1" --username=meuusuario --password=sua_senha
+```
+
+E se tudo estiver, ok, veremos uma resposta semelhante à abaixo:
+```
+Output
+Server: 127.0.0.1 (11211)
+         pid: 2772
+         uptime: 31
+         time: 1546621072
+         version: 1.5.6 Ubuntu
+     . . .
+```
+
+Nosso serviço de Memcached está sendo executado com sucesso, com suporte a SASL e autenticação de usuário.
+
+Agora é só instalar o suporte ao PHP, digitando o seguinte:
+```
+sudo apt-get install -y php-memcached 
+```
+
+E pronto, nosso ExpressionEngine agora terá uma maior velocidade  acessando e servindo seu banco de dados.
+
+## Limitando o tamanho do upload de arquivos para o ExpressionEngine no Nginx
+
+Por padrão, o Nginx limita o tamanho do upload de arquivos que são feitos através dos campos de upload do ExpressioNEngine para 1MB, mas muitas vezes uma foto, um arquivo de áudio ou um vídeo ultrapassam facilmente esse limite - e é bem simples de alterar essa configuração. Abra e edite o arquivo ```/etc/nginx/nginx.conf```:
+
+Procure pelo bloco *http* e altere o limite para 100M, por exemplo:
+```
+http {
+    ...
+    client_max_body_size 100M;
+}   
+```
+
+Agora faça a mesma coisa no *server*:
+
+```
+server {
+    ...
+    client_max_body_size 100M;
+}
+```  
+
+E no bloco *location*, que afeta uma pasta particular (uploads) de um site ou app:
+
+```
+location /uploads {
+    ...
+    client_max_body_size 100M;
+} 
+```
+
+
+Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
+
+```
+# systemctl restart nginx       #systemd
+# service nginx restart         #sysvinit
+```
