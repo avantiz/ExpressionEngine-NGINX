@@ -1,4 +1,4 @@
-# Como instalar o ExpressionEngine em Ubuntu 18 LTS e Nginx
+# Como instalar o ExpressionEngine em Ubuntu 18 LTS e Nginx, com otimização MemCached e certificado SSL
 
 O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em que escrevo este tutorial, ele precisa, no mínimo:
 
