@@ -285,7 +285,8 @@ sudo apt install memcached
 ```
 E vamos instalar também ```libmemcached-tools```, uma biblioteca que fornece várias ferramentas para trabalhar com nosso servidor Memcached
 ```
-sudo apt install libmemcached-tools 
+sudo apt install libmemcached-tools
+sudo apt install net-tools
 ```
 Feito isso, o Memcached estará instalado no servidor como um serviço, junto com ferramentas que nos permitirão testar a conectividade.
 
