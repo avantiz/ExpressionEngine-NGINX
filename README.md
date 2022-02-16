@@ -1,4 +1,4 @@
-# Como instalar o ExpressionEngine em Ubuntu 20LTS e Nginx, com otimização MemCached e certificado SSL
+# Como instalar o ExpressionEngine em Ubuntu 20LTS, Nginx e MariaDB, com otimização MemCached e certificado SSL
 
 O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em que escrevo este tutorial, ele precisa, no mínimo:
 
@@ -59,32 +59,59 @@ Instale o PHP Imagick
 sudo apt-get install php-imagick
 ```
 
-# Instale o MYSQL
+# Instale MariaDB
 
-Instale o MySQL, a seguir:
+Instale o banco de dados MariaDB, a seguir:
 ```
-sudo apt install -y mysql-server
+sudo apt-get install mariadb-server mariadb-client
 ```
-Confira a versão:
+Após instalar o MariaDB, insira os comandos abaixo para parar, iniciar e ativar o MariaDB sempre que o servidor reiniciar :
 ```
-mysql --version
+sudo systemctl stop mariadb.service
+sudo systemctl start mariadb.service
+sudo systemctl enable mariadb.service
 ```
 Execute o script mysql_secure_installation para incrementar sua instalação MySQL:
 ```
 sudo mysql_secure_installation
 ```
+
+Quando aparecer o prompt, responda as seguintes questões:
+```
+    Enter current password for root (enter for none): Dê Enter
+    Set root password? [Y/n]: Y
+    New password: Insira a senha
+    Re-enter new password: Repita a senha
+    Remove anonymous users? [Y/n]: Y
+    Disallow root login remotely? [Y/n]: Y
+    Remove test database and access to it? [Y/n]:  Y
+    Reload privilege tables now? [Y/n]:  Y
+```
+
 Efetue o login no MySQL como usuário root:
 ```
 sudo mysql -u root -p
 # Enter password:
 ```
-Crie um novo banco de dados e um novo usuário no banco de dados e anote as credenciais:
+Crie um novo banco de dados:
 ```
-mysql> CREATE DATABASE seubancodedados;
-mysql> GRANT ALL ON seubancodedados.* TO 'usuáriobancodedados' IDENTIFIED BY 'suasenhadobancodedados';
-mysql> FLUSH PRIVILEGES;
-mysql> quit
+CREATE DATABASE seubancodedados
 ```
+Crie um usuário para acessar esse banco de dados
+```
+CREATE USER 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados';
+```
+Agora vamos garantir ao usuário o acesso total ao banco de dados que foi criado:
+```
+GRANT ALL ON seubancodedados.* TO 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados' WITH GRANT OPTION;
+```
+
+Finalmente, salve suas alterações e saia:
+```
+FLUSH PRIVILEGES;
+EXIT;
+```
+
 NOTA: Substitua ```seubancodados```, ```usuáriobancodedados``` e ```suasenhadobancodedados``` pelos seus dados. Use uma senha segura.
 
 # Instale o NGINX:
