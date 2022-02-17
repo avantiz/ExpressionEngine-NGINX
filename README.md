@@ -115,6 +115,13 @@ Instale o servidor web Nginx com o seguinte comando:
 ```
 sudo apt install -y nginx
 ```
+Execute os seguintes comandos para iniciar o nginx quando o servidor der boot, automaticamente
+```
+sudo systemctl stop nginx.service
+sudo systemctl start nginx.service
+sudo systemctl enable nginx.service
+```
+
 Verifique a versão:
 ```
 sudo nginx -v
