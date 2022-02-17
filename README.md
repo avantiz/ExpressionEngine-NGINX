@@ -20,7 +20,7 @@ lsb_release -ds
 # Ubuntu 20.04.2 LTS
 ```
 
-Crie uma conta non-root com sudo e troque para ela:
+Crie uma conta non-root com ```sudo``` e troque para ela:
 
 ```
 adduser fulano --gecos "Fulano"
