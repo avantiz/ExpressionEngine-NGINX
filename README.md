@@ -272,29 +272,36 @@ Feito isso, o Memcached estará instalado no servidor como um serviço, junto co
 ## Deixando o Memcached seguro
 
 Abra ```/etc/memcached.conf``` com nano:
+
 ```
 sudo nano /etc/memcached.conf
 ```
 Veja se existe a seguinte linha no arquivo:
+
 ```
-. . .
 -l 127.0.0.1
-. . .
 ```
+
 Se você visualizar que a configuração padrão é ```-l 127.0.0.1``` , então não há necessidade de modificar esta linha, caso contrário modifique-a para ficar assim. Agora vamos desabilitar o UDP do Memcached para evitar _exploits_ de ataque de _DoS_. Para desativar o UDP (enquanto deixa o TCP), adicione a seguinte opção na parte final desse arquivo:
+
 ```
-. . .
 -U 0
 ```
+
 Salve e feche o arquivo quando você terminar. Dê um restart no serviço Memcached para aplicar as alterações:
+
 ```
 sudo systemctl restart memcached
 ```
+
 Verifique se o memcached está ativado na interface local e recebendo as conexões TCP, digitando:
+
 ```
 sudo netstat -plunt
 ```
+
 Você deverá visualizar o seguinte:
+
 ```
 Output
 Active Internet connections (only servers)
@@ -315,6 +322,7 @@ Para confirmar que o Memcached está ativo e sendo executado, digite o seguinte:
 ``` memcstat --servers="127.0.0.1" ```
 
 Você verá uma saída semelhante a essa:
+
 ```
 Output
 Server: 127.0.0.1 (11211)
@@ -323,7 +331,6 @@ Server: 127.0.0.1 (11211)
          time: 1546620611
          version: 1.5.6
      . . .
-
 ```
 
 Agora vamos ativar o SASL, adicionando o parâmetro ``` -S ``` em nosso arquivo de configiuração  ``` /etc/memcached.conf. ```
@@ -331,8 +338,8 @@ Agora vamos ativar o SASL, adicionando o parâmetro ``` -S ``` em nosso arquivo 
 ``` sudo nano /etc/memcached.conf ```
 
 E lá no final do arquivo, adicione:
+
 ```
-. . .
 -S
 ```
 Agora localize e descomente a opção ``` -vv ``` nesse mesmo arquivo. Salve e feche o arquivo, dando um _restart_ no serviço  Memcached:
@@ -361,6 +368,7 @@ sudo apt install sasl2-bin
 ```
 
 O próximo passo é criar a pasta e o arquivo que o Memcached vai verificar pelas configurações SASL:
+
 ```
 sudo mkdir /etc/sasl2
 sudo nano /etc/sasl2/memcached.conf 
@@ -375,11 +383,13 @@ sasldb_path: /etc/sasl2/memcached-sasldb2
 ```
 
 Agora vamos criar um banco de dados SASL com nossas credenciais de usuário (escolha o seu nome de usuário):
+
 ```
 sudo saslpasswd2 -a memcached -c -f /etc/sasl2/memcached-sasldb2 meuusuario
 ```
 
 Entre com sua senha e confirmação de senha e finalmente, dê ao ```memcached``` a autoridade sobre o banco de dados SASL:
+
 ```
 sudo chown memcache:memcache /etc/sasl2/memcached-sasldb2
 ```
@@ -391,11 +401,13 @@ sudo systemctl restart memcached
 ```
 
 Confira se tudo está funcionando, de acordo com as credenciais que nós criamos:
+
 ```
 memcstat --servers="127.0.0.1" --username=meuusuario --password=sua_senha
 ```
 
 E se tudo estiver, ok, veremos uma resposta semelhante à abaixo:
+
 ```
 Output
 Server: 127.0.0.1 (11211)
@@ -409,6 +421,7 @@ Server: 127.0.0.1 (11211)
 Nosso serviço de Memcached está sendo executado com sucesso, com suporte a SASL e autenticação de usuário.
 
 Agora é só instalar o suporte ao PHP, digitando o seguinte:
+
 ```
 sudo apt-get install -y php-memcached 
 ```
