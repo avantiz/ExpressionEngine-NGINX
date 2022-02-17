@@ -612,18 +612,18 @@ Se não aparecerem erros, então está tudo funcionando: o Certbot renovará seu
 Crie uma pasta na raiz:
 
 ```
-sudo mkdir -p /var/www/expressionengine
+sudo mkdir -p /var/www/seusite
 ```
 
-Altere o proprietário da pasta /var/www/expressionengine  para fulano (o nome de usuário que você escolheu lá em cima):
+Altere o proprietário da pasta ```/var/www/seusite```  para ```fulano``` (o nome de usuário que você escolheu lá em cima):
 
 ```
-sudo chown -R fulano:fulano /var/www/expressionengine
+sudo chown -R fulano:fulano /var/www/seusite
 ```
 
 Navegue para a pasta root:
 ```
-cd /var/www/expressionengine
+cd /var/www/seusite
 ```
 
 Baixe a última versão do ExpressionEngine e descompacte os arquivos para uma pasta no seu servidor:
@@ -634,10 +634,10 @@ unzip ee.zip
 rm ee.zip
 ```
 
-Altere o proprietário da pasta ``` /var/www/expressionengine ``` para ```www-data```:
+Altere o proprietário da pasta ``` /var/www/seusite ``` para ```www-data```:
 
 ```
-sudo chown -R www-data:www-data /var/www/expressionengine
+sudo chown -R www-data:www-data /var/www/seusite
 ```
 
 *ATENÇÃO: qualquer pasta ou arquivo subido por FORA do sistema do ExpressionEngine (via FTP ou SFTP, por exemplo) não será reconhecido pelo mesmo, até você alterar o proprietário para ```www-data```. Isso é uma camada extra de segurança, portanto não se esqueça deste detalhe.*
@@ -645,7 +645,7 @@ sudo chown -R www-data:www-data /var/www/expressionengine
 Caso isso aconteça, use o seguinte comando para converter a propriedade dos arquivos ou pastas subidas:
 
 ```
-sudo chown -R www-data:www-data /var/www/expressionengine/arquivos
+sudo chown -R www-data:www-data /var/www/seusite/arquivos
 ```
 
 Onde "arquivos"é a pasta para onde foram subidos os novos arquivos via FTP.
@@ -657,4 +657,3 @@ sudo systemctl restart nginx
 ```
 
 Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
-
