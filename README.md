@@ -71,7 +71,7 @@ sudo apt-get install php-imagick
 Edite o arquivo de configuração do PHP:
 
 ```
-sudo nano /etc/php/7.2/fpm/php.ini 
+sudo nano /etc/php/7.4/fpm/php.ini 
 ```
 
 busque as seguintes variáveis e altere para os valores abaixo:
@@ -81,16 +81,10 @@ file_uploads = On
 allow_url_fopen = On
 short_open_tag = On
 memory_limit = 256M
-cgi.fix_pathinfo = 0
 upload_max_filesize = 100M
 max_execution_time = 360
 ```
 
-recarregue o Nginx
-
-```
-sudo systemctl restart nginx.service
-```
 
 # Instale MariaDB
 
@@ -242,11 +236,29 @@ location /uploads {
 Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
 
 ```
-# systemctl restart nginx       #systemd
-# service nginx restart         #sysvinit
+# systemctl restart nginx 
 ```
 
  
+ ## Instalando o CertBot para certificados SSL
+ 
+ Instale o Certbot e seu plug-in do Nginx com o ```apt```:
+ 
+ Primeiro vamos adicionar mais um repositório ao nosso sistema:
+  ```
+ sudo add-apt-repository universe
+  ```
+  
+  E atualizar:
+  
+```sudo apt-get update```
+
+Agora instalamos o CertBot:
+  
+ ```
+ sudo apt install certbot python3-certbot-nginx
+```
+
  
 # Otimizando sua instalação com o MemCached (opcional)
 
@@ -255,18 +267,23 @@ Agora vamos instalar e deixar seguro o memcached no Ubuntu. O memcached é um si
 ## Instale o Memcached dos repositórios oficiais
 
 Vamos garantir que tudo esteja atualizado antes de prosseguirmos:
+
 ```
 sudo apt update
 ```
+
 Agora vamos instalar o pacote oficial
 ```
 sudo apt install memcached
 ```
+
 E vamos instalar também ```libmemcached-tools```, uma biblioteca que fornece várias ferramentas para trabalhar com nosso servidor Memcached
+
 ```
 sudo apt install libmemcached-tools
 sudo apt install net-tools
 ```
+
 Feito isso, o Memcached estará instalado no servidor como um serviço, junto com ferramentas que nos permitirão testar a conectividade.
 
 ## Deixando o Memcached seguro
