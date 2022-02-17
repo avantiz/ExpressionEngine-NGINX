@@ -445,8 +445,20 @@ sudo apt-get install -y php-memcached
 
 E pronto, nosso ExpressionEngine agora terá uma maior velocidade  acessando e servindo seu banco de dados.
  
+ ------
+ # Configurando nosso Site ExpressionEngine
+ 
+ ---------
+ 
+# Instalando nosso certificado digital
 
-# Criando o Banco de dados do ExpressionEngine 
+Execute o seguinte comando:
+```
+sudo certbot --nginx -d seusite.com -d www.seusite.com
+```
+
+
+# Criando o Banco de dados
 
 Efetue o login no MySQL como usuário root:
 
@@ -458,7 +470,7 @@ sudo mysql -u root -p
 Crie um novo banco de dados:
 
 ```
-CREATE DATABASE seubancodedados
+CREATE DATABASE seubancodedados;
 ```
 
 Crie um usuário para acessar esse banco de dados
@@ -490,7 +502,7 @@ server {
   listen [::]:80;
   listen 80;
 
-  server_name seusite.com;
+  server_name seusite.com www.seusite.com;
   root /var/www/seusite;
 
   index index.php;
@@ -517,10 +529,10 @@ server {
 
 Salve o arquivo e saia com ```Control``` + ```X``` + ```Yes```
 
-Ative a nova configuração ```expressionengine.conf``` criada, linkando o arquivo à pasta ```sites-enabled```.
+Ative a nova configuração ```seusite.conf``` criada, linkando o arquivo à pasta ```sites-enabled```.
 
 ```
-sudo ln -s /etc/nginx/sites-available/seusite /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/seusite.conf /etc/nginx/sites-enabled/
 ```
 
 Teste a configuração:
@@ -585,5 +597,8 @@ sudo systemctl restart nginx
 ```
 
 Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
+
+
+
 
 
