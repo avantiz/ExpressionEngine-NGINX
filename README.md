@@ -452,10 +452,71 @@ E pronto, nosso ExpressionEngine agora terá uma maior velocidade  acessando e s
  
 # Instalando nosso certificado digital
 
-Execute o seguinte comando:
+
+Edite o arquivo de configuração do seu site:
+
+```
+sudo nano /etc/nginx/sites-available/seusite.conf
+```
+
+Em ```server_name``` você deve encontrar algo parecido com isso:
+
+```
+server_name seusite.com www.seusite.com;
+```
+
+Se estiver assim, ok, vamos para a próxima etapa - se não, edite-o para ficar assim, salve e verifique se a sintaxe está correta:
+
+```
+sudo nginx -t
+```
+
+e recarregue o Nginx:
+
+```
+sudo systemctl reload nginx
+```
+
+Agora, execute o seguinte comando:
 ```
 sudo certbot --nginx -d seusite.com -d www.seusite.com
 ```
+
+Responda as perguntas, faça suas escolhas e dê ENTER. Se tudo correr bem, você receberá uma mensagem como esta:
+
+```
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/example.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/example.com/privkey.pem
+   Your cert will expire on 2020-08-18. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot again
+   with the "certonly" option. To non-interactively renew *all* of
+   your certificates, run "certbot renew"
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+```
+
+O pacote ```certbot``` que instalamos agora irá renovar automaticamente seus certificados quando faltar 30 dias para a expiração dos mesmos.
+
+Você pode consultar o status desse temporizador através do seguinte comando:
+
+```
+sudo systemctl status certbot.timer
+```
+
+e para testar o processo de renovação, você poderá realizar uma simulação com o ```certbot```:
+
+```
+sudo certbot renew --dry-run
+```
+
+Se não aparecerem erros, então está tudo funcionando: o Certbot renovará seus certificados e recarregará o Nginx para aplicar as alterações. Se ocorrer alguma falha, você receberá um e-mail no endereço que você cadastrou, informando que o certificado irá expirar.
+
+
 
 
 # Criando o Banco de dados
