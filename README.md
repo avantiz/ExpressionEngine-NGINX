@@ -493,6 +493,8 @@ EXIT;
 
 NOTA: Substitua ```seubancodados```, ```usuáriobancodedados``` e ```suasenhadobancodedados``` pelos seus dados. Use uma senha segura.
 
+# Configurando o NGINX para seu site:
+
 Agora vamos configurar o Nginx para o ExpressionEngine. Execute 
 ``` sudo nano /etc/nginx/sites-available/seusite.conf ``` e preencha o arquivo com a seguinte configuração:
 
