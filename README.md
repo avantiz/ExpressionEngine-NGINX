@@ -43,7 +43,7 @@ sudo apt install -y zip unzip curl wget git
 
 Instale o PHP, assim como as extensões que são necessárias:
 ```
-sudo apt install -y php7.4 php7.4-cli php7.4-fpm php7.4-common php7.4-mbstring php7.4-gd php7.4-intl php7.4-mysql php7.4-xml
+sudo apt install php7.4-fpm php7.4-common php7.4-mysql php7.4-gmp php7.4-curl php7.4-intl php7.4-mbstring php7.4-xmlrpc php7.4-gd php7.4-bcmath php7.4-xml php7.4-cli php7.4-zip
 ```
 
 Não podemos esquecer do CURL para o PHP:
