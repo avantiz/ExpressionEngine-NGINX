@@ -68,6 +68,30 @@ Instale o PHP Imagick
 sudo apt-get install php-imagick
 ```
 
+Edite o arquivo de configuração do PHP:
+
+```
+sudo nano /etc/php/7.2/fpm/php.ini 
+```
+
+busque as seguintes variáveis e altere para os valores abaixo:
+
+```
+file_uploads = On
+allow_url_fopen = On
+short_open_tag = On
+memory_limit = 256M
+cgi.fix_pathinfo = 0
+upload_max_filesize = 100M
+max_execution_time = 360
+```
+
+recarregue o Nginx
+
+```
+sudo systemctl restart nginx.service
+```
+
 # Instale MariaDB
 
 Instale o banco de dados MariaDB, a seguir:
