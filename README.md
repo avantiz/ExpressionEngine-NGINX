@@ -14,27 +14,36 @@ O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em
 ## Antes de começar:
 
 Verifique a sua versão do Ubuntu
+
 ```
 lsb_release -ds
-# Ubuntu 18.04.2 LTS
+# Ubuntu 20.04.2 LTS
 ```
+
 Crie uma conta non-root com sudo e troque para ela:
+
 ```
 adduser fulano --gecos "Fulano"
 usermod -aG sudo fulano  
 su - fulano
 ```
+
 NOTA: troque ```fulano``` pelo seu nome de usuário
 
 Defina o fuso horário:
+
 ```
 sudo dpkg-reconfigure tzdata
 ```
+
 Tenha certeza que seu sistema está atualizado:
+
 ```
 sudo apt update && sudo apt upgrade -y
 ```
+
 Instale os pacotes que forem necessários:
+
 ```
 sudo apt install -y zip unzip curl wget git
 ```
@@ -42,14 +51,19 @@ sudo apt install -y zip unzip curl wget git
 # Instale o PHP
 
 Instale o PHP, assim como as extensões que são necessárias:
+
 ```
 sudo apt install php7.4-fpm php7.4-common php7.4-mysql php7.4-gmp php7.4-curl php7.4-intl php7.4-mbstring php7.4-xmlrpc php7.4-gd php7.4-bcmath php7.4-xml php7.4-cli php7.4-zip
 ```
+
 Confira a versão:
+
 ```
 php --version
 ```
+
 Instale o PHP Imagick
+
 ```
 sudo apt-get install php-imagick
 ```
@@ -57,21 +71,27 @@ sudo apt-get install php-imagick
 # Instale MariaDB
 
 Instale o banco de dados MariaDB, a seguir:
+
 ```
 sudo apt-get install mariadb-server mariadb-client
 ```
+
 Após instalar o MariaDB, insira os comandos abaixo para parar, iniciar e ativar o MariaDB sempre que o servidor reiniciar :
+
 ```
 sudo systemctl stop mariadb.service
 sudo systemctl start mariadb.service
 sudo systemctl enable mariadb.service
 ```
+
 Execute o script mysql_secure_installation para incrementar sua instalação MySQL:
+
 ```
 sudo mysql_secure_installation
 ```
 
 Quando aparecer o prompt, responda as seguintes questões:
+
 ```
     Enter current password for root (enter for none): Dê Enter
     Set root password? [Y/n]: Y
@@ -83,39 +103,17 @@ Quando aparecer o prompt, responda as seguintes questões:
     Reload privilege tables now? [Y/n]:  Y
 ```
 
-Efetue o login no MySQL como usuário root:
-```
-sudo mysql -u root -p
-# Enter password:
-```
-Crie um novo banco de dados:
-```
-CREATE DATABASE seubancodedados
-```
-Crie um usuário para acessar esse banco de dados
-```
-CREATE USER 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados';
-```
-Agora vamos garantir ao usuário o acesso total ao banco de dados que foi criado:
-```
-GRANT ALL ON seubancodedados.* TO 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados' WITH GRANT OPTION;
-```
-
-Finalmente, salve suas alterações e saia:
-```
-FLUSH PRIVILEGES;
-EXIT;
-```
-
-NOTA: Substitua ```seubancodados```, ```usuáriobancodedados``` e ```suasenhadobancodedados``` pelos seus dados. Use uma senha segura.
 
 # Instale o NGINX:
 
 Instale o servidor web Nginx com o seguinte comando:
+
 ```
 sudo apt install -y nginx
 ```
+
 Execute os seguintes comandos para iniciar o nginx quando o servidor der boot, automaticamente
+
 ```
 sudo systemctl stop nginx.service
 sudo systemctl start nginx.service
@@ -126,62 +124,19 @@ Verifique a versão:
 ```
 sudo nginx -v
 ```
-Agora vamos configurar o Nginx para o ExpressionEngine. Execute 
-``` sudo vim /etc/nginx/sites-available/expressionengine.conf ``` e preencha o arquivo com a seguinte configuração:
 
-```
-server {
-
-  listen [::]:80;
-  listen 80;
-
-  server_name example.com;
-  root /var/www/expressionengine;
-
-  index index.php;
-
-  location / {
-    index index.php;
-    try_files $uri $uri/ @ee;
-  }
-
-  location @ee {
-    rewrite ^(.*) /index.php?$1 last;
-  }
-
-  location ~* \.php$ {
-    fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-    include fastcgi_params;
-    fastcgi_index index.php5;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-  }
-
-}
-
-```
-
-Salve o arquivo e saia com ```:``` + ```W``` + ```Q```
-
-Ative a nova configuração ```expressionengine.conf``` criada, linkando o arquivo à pasta ```sites-enabled```.
-
-Teste a configuração:
-
-``` sudo nginx -t ```
-
-Recarregue o Nginx:
-```
-sudo systemctl reload nginx.service
-```
 
 Agora vamos configurar o Nginx para comprimir as páginas html e arquivos, usando GZIP:
 
 Para realizar essas alterações, abra o arquivo de configuração principal do nginx em seu editor de texto (nesse caso, o Nano):\
+
 ```
 sudo nano /etc/nginx/nginx.conf
 ```
+
 Localize a seção de configurações do arquivo, que deve se parecer mais ou menos com isso:
+
 ```
-. . .
 ##
 # `gzip` Settings
 #
@@ -195,17 +150,16 @@ gzip_disable "msie6";
 # gzip_buffers 16 8k;
 # gzip_http_version 1.1;
 # gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
-. . . 
-
 ```
+
 Você pode verificar que por padrão, a compressão gzip está ativada, mas várias configurações adicionais estão comentadas com o sinal de comentário, portanto vamos fazer várias alterações por aqui:
 
 - Ativar as configurações adicionais, descimentando todas as linhas comentadas;
 - Adicionar a diretiva ```gzip_min_lenght 256;``` que diz para o Nginx não compactar arquivos menores que 256 bytes, otimizando nossa performance de compressão.
 - Adicionar fontes, ícones e imagens SVG aos parâmetros de compressão.
-Depois que realizarmos todas essas alterações, essa seção na configuraçao ficará algo parecido com isso:
+Depois que realizarmos todas essas alterações, essa seção na configuração ficará algo parecido com isso:
+
 ```
-. . .
 ##
 # `gzip` Settings
 #
@@ -220,58 +174,57 @@ gzip_buffers 16 8k;
 gzip_http_version 1.1;
 gzip_min_length 256;
 gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
-. . .
- ```
+```
  
  Salve, feche o arquivo e saia.
  Recarregue o Nginx:
+
  ```
  sudo systemctl reload nginx
  ```
  
+ ## Limitando o tamanho do upload de arquivos para o ExpressionEngine no Nginx
+
+Por padrão, o Nginx limita o tamanho do upload de arquivos que são feitos através dos campos de upload do ExpressioNEngine para 1MB, mas muitas vezes uma foto, um arquivo de áudio ou um vídeo ultrapassam facilmente esse limite - e é bem simples de alterar essa configuração. Abra e edite o arquivo ```/etc/nginx/nginx.conf```:
+
+Procure pelo bloco *http* e altere o limite para 100M, por exemplo:
+
+```
+http {
+    ...
+    client_max_body_size 100M;
+}   
+```
+
+Agora faça a mesma coisa no *server*:
+
+```
+server {
+    ...
+    client_max_body_size 100M;
+}
+```  
+
+E no bloco *location*, que afeta uma pasta particular (uploads) de um site ou app:
+
+```
+location /uploads {
+    ...
+    client_max_body_size 100M;
+} 
+```
+
+
+Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
+
+```
+# systemctl restart nginx       #systemd
+# service nginx restart         #sysvinit
+```
+
  
-
-# Instalando o ExpressionEngine
-
-Crie uma pasta na raiz:
-```
-sudo mkdir -p /var/www/expressionengine
-```
-Altere o proprietário da pasta /var/www/expressionengine  para fulano (o nome de usuário que você escolheu lá em cima):
-```
-sudo chown -R fulano:fulano /var/www/expressionengine
-```
-Navegue para a pasta root:
-```
-cd /var/www/expressionengine
-```
-Baixe a última versão do ExpressionEngine e descompacte os arquivos para uma pasta no seu servidor:
-```
-wget -O ee.zip --referer https://expressionengine.com/ 'https://expressionengine.com/?ACT=243'
-unzip ee.zip
-rm ee.zip
-```
-
-Altere o proprietário da pasta ``` /var/www/expressionengine ``` para ```www-data```:
-```
-sudo chown -R www-data:www-data /var/www/expressionengine
-```
-
-*ATENÇÃO: qualquer pasta ou arquivo subido por FORA do sistema do ExpressionEngine (via FTP ou SFTP, por exemplo) não será reconhecido pelo mesmo, até você alterar o proprietário para ```www-data```. Isso é uma camada extra de segurança, portanto não se esqueça deste detalhe.*
-
-Caso isso aconteça, use o seguinte comando para converter a propriedade dos arquivos ou pastas subidas:
-```
-sudo chown -R www-data:www-data /var/www/expressionengine/arquivos
-```
-Onde "arquivos"é a pasta para onde foram subidos os novos arquivos via FTP.
-
-Na sequência, dê um restart no Nginx:
-```
-sudo systemctl restart nginx
-```
-Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
-
-# Otimizando sua instalação do ExpressionEngine
+ 
+# Otimizando sua instalação com o MemCached (opcional)
 
 Agora vamos instalar e deixar seguro o memcached no Ubuntu. O memcached é um sistema de cache de objetos, armazenando temporariamente objetos na memória do servidor, retendo registros frequentes ou acessados recentemente. Com isto, reduziremos a quantidade de requisições diretas em seus bancos de dados, reduzindo a carga do sistema.
 
@@ -437,41 +390,146 @@ sudo apt-get install -y php-memcached
 ```
 
 E pronto, nosso ExpressionEngine agora terá uma maior velocidade  acessando e servindo seu banco de dados.
+ 
 
-## Limitando o tamanho do upload de arquivos para o ExpressionEngine no Nginx
+# Criando o Banco de dados do ExpressionEngine 
 
-Por padrão, o Nginx limita o tamanho do upload de arquivos que são feitos através dos campos de upload do ExpressioNEngine para 1MB, mas muitas vezes uma foto, um arquivo de áudio ou um vídeo ultrapassam facilmente esse limite - e é bem simples de alterar essa configuração. Abra e edite o arquivo ```/etc/nginx/nginx.conf```:
+Efetue o login no MySQL como usuário root:
 
-Procure pelo bloco *http* e altere o limite para 100M, por exemplo:
 ```
-http {
-    ...
-    client_max_body_size 100M;
-}   
+sudo mysql -u root -p
+# Enter password:
 ```
 
-Agora faça a mesma coisa no *server*:
+Crie um novo banco de dados:
+
+```
+CREATE DATABASE seubancodedados
+```
+
+Crie um usuário para acessar esse banco de dados
+
+```
+CREATE USER 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados';
+```
+
+Agora vamos garantir ao usuário o acesso total ao banco de dados que foi criado:
+
+```
+GRANT ALL ON seubancodedados.* TO 'usuariobancodedados'@'localhost' IDENTIFIED BY 'suasenhadobancodedados' WITH GRANT OPTION;
+```
+
+Finalmente, salve suas alterações e saia:
+```
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+NOTA: Substitua ```seubancodados```, ```usuáriobancodedados``` e ```suasenhadobancodedados``` pelos seus dados. Use uma senha segura.
+
+Agora vamos configurar o Nginx para o ExpressionEngine. Execute 
+``` sudo nano /etc/nginx/sites-available/seusite.conf ``` e preencha o arquivo com a seguinte configuração:
 
 ```
 server {
-    ...
-    client_max_body_size 100M;
+
+  listen [::]:80;
+  listen 80;
+
+  server_name seusite.com;
+  root /var/www/seusite;
+
+  index index.php;
+
+  location / {
+    index index.php;
+    try_files $uri $uri/ @ee;
+  }
+
+  location @ee {
+    rewrite ^(.*) /index.php?$1 last;
+  }
+
+  location ~* \.php$ {
+    fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+    include fastcgi_params;
+    fastcgi_index index.php5;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+
 }
-```  
-
-E no bloco *location*, que afeta uma pasta particular (uploads) de um site ou app:
 
 ```
-location /uploads {
-    ...
-    client_max_body_size 100M;
-} 
-```
 
+Salve o arquivo e saia com ```Control``` + ```X``` + ```Yes```
 
-Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
+Ative a nova configuração ```expressionengine.conf``` criada, linkando o arquivo à pasta ```sites-enabled```.
 
 ```
-# systemctl restart nginx       #systemd
-# service nginx restart         #sysvinit
+sudo ln -s /etc/nginx/sites-available/seusite /etc/nginx/sites-enabled/
 ```
+
+Teste a configuração:
+
+``` sudo nginx -t ```
+
+Recarregue o Nginx:
+
+```
+sudo systemctl reload nginx.service
+```
+
+ 
+
+# Instalando o ExpressionEngine
+
+Crie uma pasta na raiz:
+
+```
+sudo mkdir -p /var/www/expressionengine
+```
+
+Altere o proprietário da pasta /var/www/expressionengine  para fulano (o nome de usuário que você escolheu lá em cima):
+
+```
+sudo chown -R fulano:fulano /var/www/expressionengine
+```
+
+Navegue para a pasta root:
+```
+cd /var/www/expressionengine
+```
+
+Baixe a última versão do ExpressionEngine e descompacte os arquivos para uma pasta no seu servidor:
+
+```
+wget -O ee.zip --referer https://expressionengine.com/ 'https://expressionengine.com/?ACT=243'
+unzip ee.zip
+rm ee.zip
+```
+
+Altere o proprietário da pasta ``` /var/www/expressionengine ``` para ```www-data```:
+
+```
+sudo chown -R www-data:www-data /var/www/expressionengine
+```
+
+*ATENÇÃO: qualquer pasta ou arquivo subido por FORA do sistema do ExpressionEngine (via FTP ou SFTP, por exemplo) não será reconhecido pelo mesmo, até você alterar o proprietário para ```www-data```. Isso é uma camada extra de segurança, portanto não se esqueça deste detalhe.*
+
+Caso isso aconteça, use o seguinte comando para converter a propriedade dos arquivos ou pastas subidas:
+
+```
+sudo chown -R www-data:www-data /var/www/expressionengine/arquivos
+```
+
+Onde "arquivos"é a pasta para onde foram subidos os novos arquivos via FTP.
+
+Na sequência, dê um restart no Nginx:
+
+```
+sudo systemctl restart nginx
+```
+
+Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
+
+
