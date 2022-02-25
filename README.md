@@ -1,4 +1,4 @@
-# Como instalar o ExpressionEngine em Ubuntu 20 LTS, Nginx, PHP 7.4 e MariaDB, com otimização MemCached e certificado SSL
+# Instalando e configurando o ExpressionEngine do ZERO em Ubuntu 20 LTS, Nginx, PHP 7.4 e MariaDB, com otimização MemCached e certificado SSL
 
 O ExpressionEngine precisa de um webserver executando PHP e MySQL. No momento em que escrevo este tutorial, ele precisa, no mínimo:
 
