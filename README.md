@@ -635,7 +635,7 @@ http {
 }   
 ```
 
-Agora faça a mesma coisa no *server*:
+Agora vamos para o arquivo de configuração que você criou para o seu site e faça a mesma coisa no *server*:
 
 ```
 server {
