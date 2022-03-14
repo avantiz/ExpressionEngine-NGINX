@@ -200,44 +200,6 @@ gzip_types text/plain text/css application/json application/x-javascript text/xm
  ```
  sudo systemctl reload nginx
  ```
- 
- ## Limitando o tamanho do upload de arquivos para o ExpressionEngine no Nginx
-
-Por padrão, o Nginx limita o tamanho do upload de arquivos que são feitos através dos campos de upload do ExpressioNEngine para 1MB, mas muitas vezes uma foto, um arquivo de áudio ou um vídeo ultrapassam facilmente esse limite - e é bem simples de alterar essa configuração. Abra e edite o arquivo ```/etc/nginx/nginx.conf```:
-
-Procure pelo bloco *http* e altere o limite para 100M, por exemplo:
-
-```
-http {
-    ...
-    client_max_body_size 100M;
-}   
-```
-
-Agora faça a mesma coisa no *server*:
-
-```
-server {
-    ...
-    client_max_body_size 100M;
-}
-```  
-
-E no bloco *location*, que afeta uma pasta particular (uploads) de um site ou app:
-
-```
-location /uploads {
-    ...
-    client_max_body_size 100M;
-} 
-```
-
-
-Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
-
-```
-# systemctl restart nginx 
-```
 
  
  ## Instalando o CertBot para certificados SSL
@@ -657,3 +619,44 @@ sudo systemctl restart nginx
 ```
 
 Aponte seu navegador para a URL do arquivo ```admin.php``` do ExpressionEngine. Por exemplo: ```https://seusite.com/admin.php``` e siga as instruções para instalar o ExpressionEngine. Assim que você finalizar a instalação, remova a pasta ```system/ee/installer/``` do seu servidor.
+
+
+ 
+ ## Limitando o tamanho do upload de arquivos para o ExpressionEngine no Nginx
+
+Por padrão, o Nginx limita o tamanho do upload de arquivos que são feitos através dos campos de upload do ExpressioNEngine para 1MB, mas muitas vezes uma foto, um arquivo de áudio ou um vídeo ultrapassam facilmente esse limite - e é bem simples de alterar essa configuração. Abra e edite o arquivo ```/etc/nginx/nginx.conf```:
+
+Procure pelo bloco *http* e altere o limite para 100M, por exemplo:
+
+```
+http {
+    ...
+    client_max_body_size 100M;
+}   
+```
+
+Agora faça a mesma coisa no *server*:
+
+```
+server {
+    ...
+    client_max_body_size 100M;
+}
+```  
+
+E no bloco *location*, que afeta uma pasta particular (uploads) de um site ou app:
+
+```
+location /uploads {
+    ...
+    client_max_body_size 100M;
+} 
+```
+
+
+Salve o arquivo e dê um _restart_ no serviço Nginx com um dos comandos abaixo:
+
+```
+# systemctl restart nginx 
+```
+
